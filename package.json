@@ -21,7 +21,9 @@
   "dependencies": {
     "dotenv": "^16.0.0",
     "esm": "^3.2.25",
+    "gradient-string": "^2.0.0",
     "inquirer": "^8.2.2",
+    "lodash": "^4.17.21",
     "mysql2": "^2.3.3"
   }
 }
