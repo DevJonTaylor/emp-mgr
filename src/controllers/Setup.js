@@ -3,6 +3,7 @@ import QF from '../../lib/Questions/QFactory'
 import Database from '../modals/Database'
 import AppView from '../views/AppView'
 import dotenv from 'dotenv'
+import App from './App'
 
 export default class Setup {
   static _configPath = `${__rootdir}/.env`
@@ -25,11 +26,11 @@ export default class Setup {
   }
 
   static async run() {
-    AppView.clear()
     try {
       await this._checkConfigFile()
     } catch(err) {
       if(err.code === 'ENOENT') {  // .env file does not exist
+        AppView.clear()
         const answers = await this._handleNoConfig()
         try {
           await Database.check(answers)
@@ -48,6 +49,8 @@ export default class Setup {
         ])
       }
     }
+
+    return new App()
   }
 
   static config() {
