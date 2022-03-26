@@ -1,3 +1,5 @@
+import gradient from 'gradient-string'
+
 export default class AppView {
   static clear() {
     console.clear()
@@ -7,6 +9,10 @@ export default class AppView {
   static log(str) {
     console.log(str)
     return this
+  }
+
+  static gradientMultiline(str, gradientName = 'atlas') {
+    this.log(gradient[gradientName].multiline(str))
   }
 
   static error(err) {
