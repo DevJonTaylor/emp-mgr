@@ -37,32 +37,37 @@ export default class Database {
     })
   }
 
-  static _getQuery(table) {
+  static getQuery(table) {
     if(!this._query) this._query = knex({client: 'mysql'})
 
     return !table ? this._query : this._query(table)
   }
 
-  static query(query, preparedStatementArray = []) {
+  static query(query, preparedStatementArray = null) {
     return new Promise((resolve, reject) => {
       this._getDb()
         .then(db => {
-          db.query(query, preparedStatementArray, (err, results) => {
-            if(err) return reject(err)
-            return resolve(results)
-          })
+          if(!preparedStatementArray) {
+            db.query(
+              query.sql,
+              query.bindings,
+              (err, results) => !err ? resolve(results) : reject(err))
+          } else {
+            db.query(
+              query,
+              preparedStatementArray,
+              (err, results) => !err ? resolve(results) : reject(err))
+          }
         })
     })
   }
 
   static update(table, obj, where) {
-    const q = this._getQuery(table).update(obj).where(where).toSQL()
-    return this.query(q.sql, q.bindings)
+    return this.query(this.getQuery(table).update(obj).where(where).toSQL())
   }
 
   static insert(table, obj) {
-    const q = this._getQuery(table).insert(obj)
-    return this.query(q.toSQL().sql, q.toSQL().bindings)
+    return this.query(this.getQuery(table).insert(obj).toSQL())
   }
 
   static getAll(table, columns = '*') {
@@ -70,20 +75,18 @@ export default class Database {
   }
 
   static get(table, columns = '*', where = []) {
-    const q = this._getQuery(table).select(columns)
+    const q = this.getQuery(table).select(columns)
     if(!Array.isArray(where)) {
       q.where(where)
     } else if(where.length) {
       if(where.length > 1) for(const w of where) q.orWhere(w)
       else q.where(where[0])
     }
-    let sql = q.toSQL()
-    return this.query(sql.sql, sql.bindings)
+    return this.query(q.toSQL())
   }
 
   static delete(table, where) {
-    const q = this._getQuery(table).delete().where(where).toSQL()
-    return this.query(q.sql, q.bindings)
+    return this.query(this.getQuery(table).delete().where(where).toSQL())
   }
 
   static _handleConnectionError(err) {

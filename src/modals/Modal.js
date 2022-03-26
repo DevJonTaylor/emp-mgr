@@ -5,6 +5,14 @@ export default class Modal {
   static keys = []
   columns = {}
 
+  static mapResults(results) {
+    return results.map(result => new this(result))
+  }
+
+  static runQuery(query) {
+    return DB.query(query.toSQL()).then(results => this.mapResults(results))
+  }
+
   static fromObject(obj) {
     return new this(obj);
   }
