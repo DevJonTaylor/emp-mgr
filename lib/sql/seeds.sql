@@ -1,8 +1,8 @@
 USE `office_db`;
 
-insert into `department`(name) values
-           ('Research and Development'),
-           ('Product Management'),
-           ('Human Resources'),
-           ('Sales'),
-           ('Engineering');
+INSERT INTO `department` (`name`) VALUES
+    ('Human Resources'),
+    ('Development'),
+    ('Law'),
+    ('Accounting'),
+    ('Sales');

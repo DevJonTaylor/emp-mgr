@@ -1,0 +1,329 @@
+{
+  "department": [
+    { "name": "Human Resources" },
+    { "name": "Software Development" },
+    { "name": "Law" },
+    { "name": "Sales" },
+    { "name": "Accounting" }
+  ],
+  "role": [
+    {
+      "title": "Recruiter",
+      "salary": 40000.00,
+      "department_id": 1
+    },
+    {
+      "title": "Hiring Manager",
+      "salary": 95000.00,
+      "department_id": 1
+    },
+    {
+      "title": "CEO",
+      "salary": 270000.00,
+      "department_id": 1
+    },
+    {
+      "title": "Junior Developer",
+      "salary": 45000.00,
+      "department_id": 2
+    },
+    {
+      "title": "Senior Developer",
+      "salary": 85000.00,
+      "department_id": 2
+    },
+    {
+      "title": "Legal Assistant",
+      "salary": 75000.00,
+      "department_id": 3
+    },
+    {
+      "title": "Lawyer",
+      "salary": 185000.00,
+      "department_id": 3
+    },
+    {
+      "title": "Sales Manager",
+      "salary": 65000.00,
+      "department_id": 4
+    },
+    {
+      "title": "Sales Associate",
+      "salary": 42000.00,
+      "department_id": 4
+    },
+    {
+      "title": "Accountant",
+      "salary": 65000.00,
+      "department_id": 5
+    },
+    {
+      "title": "VP of Finance",
+      "salary": 97000.00,
+      "department_id": 5
+    }
+  ],
+  "employee": [
+    {
+      "first_name": "Jon",
+      "last_name": "Taylor",
+      "role_id": 3
+    },
+    {
+      "first_name": "Pascal",
+      "last_name": "Cruce",
+      "role_id": 2,
+      "manager_id": 1
+    }, {
+      "first_name": "Filippa",
+      "last_name": "Steere",
+      "role_id": 2,
+      "manager_id": 1
+    }, {
+      "first_name": "Johnath",
+      "last_name": "Schrei",
+      "role_id": 1,
+      "manager_id": 2
+    }, {
+      "first_name": "Kerry",
+      "last_name": "Geal",
+      "role_id": 1,
+      "manager_id": 2
+    }, {
+      "first_name": "Olivero",
+      "last_name": "Baumann",
+      "role_id": 1,
+      "manager_id": 2
+    }, {
+      "first_name": "Cristi",
+      "last_name": "Thorlby",
+      "role_id": 1,
+      "manager_id": 2
+    }, {
+      "first_name": "Cindee",
+      "last_name": "Glasebrook",
+      "role_id": 1,
+      "manager_id": 2
+    },{
+      "first_name": "Aleece",
+      "last_name": "German",
+      "role_id": 1,
+      "manager_id": 3
+    }, {
+      "first_name": "Marcie",
+      "last_name": "Dickerson",
+      "role_id": 1,
+      "manager_id": 3
+    }, {
+      "first_name": "Vallie",
+      "last_name": "Hutt",
+      "role_id": 1,
+      "manager_id": 3
+    }, {
+      "first_name": "Cherilyn",
+      "last_name": "Cristofori",
+      "role_id": 1,
+      "manager_id": 3
+    }, {
+      "first_name": "Ches",
+      "last_name": "Churcher",
+      "role_id": 1,
+      "manager_id": 3
+    }, {
+      "first_name": "Moira",
+      "last_name": "Lyness",
+      "role_id": 5,
+      "manager_id": 1
+    }, {
+      "first_name": "Cinnamon",
+      "last_name": "Tramel",
+      "role_id": 5,
+      "manager_id": 1
+    }, {
+      "first_name": "Batsheva",
+      "last_name": "Saltern",
+      "role_id": 4,
+      "manager_id": 14
+    }, {
+      "first_name": "Maynard",
+      "last_name": "Baylis",
+      "role_id": 4,
+      "manager_id": 15
+    }, {
+      "first_name": "Angil",
+      "last_name": "Gillogley",
+      "role_id": 4,
+      "manager_id": 14
+    }, {
+      "first_name": "Jolynn",
+      "last_name": "Moggan",
+      "role_id": 4,
+      "manager_id": 15
+    }, {
+      "first_name": "Eddie",
+      "last_name": "Peinke",
+      "role_id": 4,
+      "manager_id": 14
+    }, {
+      "first_name": "Deloria",
+      "last_name": "Pickworth",
+      "role_id": 4,
+      "manager_id": 15
+    }, {
+      "first_name": "Zebulen",
+      "last_name": "Port",
+      "role_id": 4,
+      "manager_id": 14
+    }, {
+      "first_name": "Boy",
+      "last_name": "Ticehurst",
+      "role_id": 4,
+      "manager_id": 15
+    }, {
+      "first_name": "Marlene",
+      "last_name": "Zettoi",
+      "role_id": 4,
+      "manager_id": 14
+    }, {
+      "first_name": "Amery",
+      "last_name": "Sword",
+      "role_id": 4,
+      "manager_id": 15
+    }, {
+      "first_name": "Anitra",
+      "last_name": "Readie",
+      "role_id": 7,
+      "manager_id": 1
+    }, {
+      "first_name": "Erna",
+      "last_name": "Norfolk",
+      "role_id": 6,
+      "manager_id": 26
+    }, {
+      "first_name": "Sunny",
+      "last_name": "Parlatt",
+      "role_id": 6,
+      "manager_id": 26
+    }, {
+      "first_name": "Nessa",
+      "last_name": "Leverington",
+      "role_id": 8,
+      "manager_id": 1
+    }, {
+      "first_name": "Grata",
+      "last_name": "Kwiek",
+      "role_id": 8,
+      "manager_id": 1
+    }, {
+      "first_name": "Karlyn",
+      "last_name": "Jandourek",
+      "role_id": 8,
+      "manager_id": 1
+    }, {
+      "first_name": "Venus",
+      "last_name": "Eastbury",
+      "role_id": 9,
+      "manager_id": 29
+    }, {
+      "first_name": "Jany",
+      "last_name": "Tacey",
+      "role_id": 9,
+      "manager_id": 30
+    }, {
+      "first_name": "Viviene",
+      "last_name": "Huskinson",
+      "role_id": 9,
+      "manager_id": 31
+    }, {
+      "first_name": "Kippie",
+      "last_name": "Starsmeare",
+      "role_id": 9,
+      "manager_id": 29
+    }, {
+      "first_name": "Meagan",
+      "last_name": "Grove",
+      "role_id": 9,
+      "manager_id": 30
+    }, {
+      "first_name": "Arlana",
+      "last_name": "Tatters",
+      "role_id": 9,
+      "manager_id": 31
+    }, {
+      "first_name": "Lennie",
+      "last_name": "Corhard",
+      "role_id": 9,
+      "manager_id": 29
+    }, {
+      "first_name": "Tobias",
+      "last_name": "Exeter",
+      "role_id": 9,
+      "manager_id": 30
+    }, {
+      "first_name": "Tracy",
+      "last_name": "Date",
+      "role_id": 9,
+      "manager_id": 31
+    }, {
+      "first_name": "Roanne",
+      "last_name": "Torrejon",
+      "role_id": 9,
+      "manager_id": 29
+    }, {
+      "first_name": "Rowe",
+      "last_name": "Worwood",
+      "role_id": 9,
+      "manager_id": 30
+    }, {
+      "first_name": "Margot",
+      "last_name": "Brockley",
+      "role_id": 9,
+      "manager_id": 31
+    }, {
+      "first_name": "Johnette",
+      "last_name": "Brogi",
+      "role_id": 9,
+      "manager_id": 29
+    }, {
+      "first_name": "Emmalynne",
+      "last_name": "Duetschens",
+      "role_id": 9,
+      "manager_id": 30
+    }, {
+      "first_name": "Hilliard",
+      "last_name": "Sollars",
+      "role_id": 9,
+      "manager_id": 31
+    }, {
+      "first_name": "Gerri",
+      "last_name": "Linkin",
+      "role_id": 11,
+      "manager_id": 1
+    }, {
+      "first_name": "Desi",
+      "last_name": "Venables",
+      "role_id": 10,
+      "manager_id": 47
+    }, {
+      "first_name": "Aldric",
+      "last_name": "Linstead",
+      "role_id": 10,
+      "manager_id": 47
+    }, {
+      "first_name": "Judy",
+      "last_name": "Wright",
+      "role_id": 10,
+      "manager_id": 47
+    }, {
+      "first_name": "Bobbee",
+      "last_name": "O'Doghesty",
+      "role_id": 10,
+      "manager_id": 47
+    }, {
+      "first_name": "Vanya",
+      "last_name": "Frain",
+      "role_id": 10,
+      "manager_id": 47
+    }
+  ]
+}
