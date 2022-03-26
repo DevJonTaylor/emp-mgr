@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon index.js",
     "seed": "node index.js seed",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/DevJonTaylor/emp-mgr#readme",
   "dependencies": {
+    "console.table": "^0.10.0",
     "dotenv": "^16.0.0",
     "esm": "^3.2.25",
     "gradient-string": "^2.0.0",

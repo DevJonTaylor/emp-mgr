@@ -5,7 +5,7 @@ Setup.run()
   .then(app => {
     Setup.config()
     return Setup.checkArguments()
-      .then(() => Manager.getTeamByManagerId(31))
+      .then(() => app.main())
   })
   .then(mgr => AppView.log(mgr))
   .then(() => process.exit(1))

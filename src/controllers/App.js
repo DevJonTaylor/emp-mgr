@@ -6,8 +6,8 @@ export default class App {
   _splash = ''
   _mainOptions = [
     'Employee',
-    'Department',
     'Role',
+    'Department',
     'Exit'
   ]
 
@@ -30,7 +30,7 @@ export default class App {
     await this.splash()
     /** @type { { option: string } }*/
     const answers = await QF
-      .list('option', 'What would you like to do?', list => {
+      .list('option', 'What would subject would you like to work with?', list => {
         list.newChoices(this._mainOptions)
       })
       .answers

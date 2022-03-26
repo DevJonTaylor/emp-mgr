@@ -61,8 +61,17 @@ export class Subordinate extends Modal {
     return this.runQuery(this.getQuery().andWhere('e2.id', id))
   }
 
+  static byRoleId(id) {
+    return this.runQuery(this.getQuery().where('r.id', id))
+  }
+
   static all() {
     return this.runQuery(this.getQuery())
+  }
+
+  async getManager() {
+    return Manager.bySubordinateId(this.id)
+      .then(managers => managers[0])
   }
 }
 
@@ -77,7 +86,6 @@ export class Manager extends Modal {
     await mgr.getSubordinates()
 
     return mgr
-
   }
 
   static byRoleId(id) {
@@ -86,6 +94,10 @@ export class Manager extends Modal {
 
   static byDepartmentId(id) {
     return this.runQuery(this.getQuery().where('d.id', id))
+  }
+
+  static bySubordinateId(id) {
+    return this.runQuery(this.getQuery().where('e2.id', id))
   }
 
   static getQuery() {
