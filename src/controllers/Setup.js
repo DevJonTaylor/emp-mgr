@@ -4,6 +4,8 @@ import Database from '../modals/Database'
 import AppView from '../views/AppView'
 import dotenv from 'dotenv'
 import App from './App'
+import { Department, Role, Employee } from '../modals'
+import { department, role, employee } from '../../seeds.json'
 
 export default class Setup {
   static _configPath = `${__rootdir}/.env`
@@ -51,6 +53,25 @@ export default class Setup {
     }
 
     return new App()
+  }
+
+  static async seed() {
+    await Department.create(department)
+    await Role.create(role)
+    await Employee.create(employee)
+    AppView.log('Seeds inserted')
+    process.exit(1)
+  }
+
+  static async checkArguments() {
+    const args = [...process.argv].splice(2, 2)
+    for(const arg of args) {
+      switch(arg) {
+        case 'seed':
+          await this.seed()
+          break
+      }
+    }
   }
 
   static config() {

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "seed": "node index.js seed",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,5 +26,8 @@
     "inquirer": "^8.2.2",
     "lodash": "^4.17.21",
     "mysql2": "^2.3.3"
+  },
+  "devDependencies": {
+    "knex": "^1.0.4"
   }
 }
