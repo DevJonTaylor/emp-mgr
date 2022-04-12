@@ -1,8 +1,6 @@
-DROP SCHEMA IF EXISTS `office_db`;
-CREATE SCHEMA `office_db`;
-
 USE `office_db`;
 
+DROP TABLE IF EXISTS `department`;
 CREATE TABLE `department` (
         `id` INT NOT NULL AUTO_INCREMENT,
         `name` VARCHAR(30) NOT NULL,
@@ -10,7 +8,7 @@ CREATE TABLE `department` (
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = armscii8;
 
-
+DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role` (
         `id` INT NOT NULL AUTO_INCREMENT,
         `title` VARCHAR(30) NOT NULL,
@@ -20,6 +18,7 @@ CREATE TABLE `role` (
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = armscii8;
 
+DROP TABLE IF EXISTS `employee`;
 CREATE TABLE `employee` (
         `id` INT NOT NULL AUTO_INCREMENT,
         `first_name` VARCHAR(30) NOT NULL,

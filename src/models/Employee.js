@@ -4,6 +4,62 @@ import DB from './Database'
 export class Employee extends Modal {
   static table = 'employee'
   static keys = ['id', 'first_name', 'last_name', 'role_id', 'manager_id']
+
+  static getQuery() {
+    const query = DB.getQuery()
+    const tables = {
+      employee: { e: 'employee' },
+      role: { r: 'role' },
+      department: { d: 'department' }
+    }
+    const columns = {
+      distinct: { id: 'e.id' },
+      select: {
+        name: query.raw('CONCAT(`e`.`first_name`, \' \', `e`.`last_name`)'),
+        title: 'r.title',
+        salary: 'r.salary',
+        department: 'd.name'
+      }
+    }
+    const joins = {
+      department: [tables.department, 'r.department_id', 'd.id'],
+      role: [tables.role, 'e.role_id', 'r.id']
+    }
+
+    return { query, tables, columns, joins }
+  }
+
+  static getMultipleQuery() {
+    const { query, tables, columns, joins } = this.getQuery()
+
+    return query(tables.employee)
+      .distinct(columns.distinct)
+      .select(columns.select)
+      .join(...joins.role)
+      .join(...joins.department)
+  }
+
+  static all() {
+    return this.runQuery(this.getMultipleQuery(), true)
+  }
+
+  static async runQuery(query, switchKeys) {
+    let results
+    if(!switchKeys) {
+      results = await super.runQuery(query)
+    } else {
+      const tempKeys = [...this.keys]
+      this.keys = ['id', 'name', 'title', 'salary', 'department']
+      results = await super.runQuery(query)
+      this.keys = [...tempKeys]
+    }
+    return results
+  }
+
+  static byName(name) {
+    const { columns } = this.getQuery()
+    return this.runQuery(this.getMultipleQuery().where(columns.select.name, 'like', `%${name}%`), true)
+  }
 }
 
 export class Subordinate extends Modal {
@@ -55,6 +111,10 @@ export class Subordinate extends Modal {
         .distinct(columns.distinct)
         .from(tables.employee1)
         .innerJoin(...joins.mgrEmployee))
+  }
+
+  static byDepartmentId(id) {
+    return this.runQuery(this.getQuery().where('d.id', id))
   }
 
   static byManagerId(id) {

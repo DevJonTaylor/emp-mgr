@@ -1,15 +1,31 @@
-import Setup from './controllers/Setup'
-import AppView from './views/AppView'
-import { Department, Role, Employee, Manager, Subordinate } from './modals'
-Setup.run()
-  .then(app => {
-    Setup.config()
-    return Setup.checkArguments()
-      .then(() => app.main())
-  })
-  .then(mgr => AppView.log(mgr))
-  .then(() => process.exit(1))
-  .catch(err => {
-    if(process.exitCode) return
-    AppView.error(err)
-  })
+/**
+ * Class Application
+ * This will act as a main control station.
+ * Maintain state
+ * Reference Splash
+ * Reference Breadcrumbs
+ * Reference Menu
+ * Reference Model Access
+ */
+
+/**
+ * Class Breadcrumbs
+ * Will keep a history of previously selected location
+ * Will keep a current location for the user
+ * Reference previous menu for quick backwards action
+ */
+
+/**
+ * Class Menu
+ * Reference to Menu Item classes.
+ */
+
+/**
+ * Class Item
+ * Reference to a Request or Menu class
+ */
+
+/**
+ * Class Request
+ * Performs an action or actions to a database.
+ */

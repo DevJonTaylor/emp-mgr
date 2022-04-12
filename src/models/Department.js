@@ -5,6 +5,10 @@ export default class Department extends Modal {
   static table = 'department'
   static keys = ['id', 'name']
 
+  static byName(name) {
+    return DB.getQuery(this.name).where('name', 'like', `%${name}%`)
+  }
+
   static getQueryVariables() {
     const tables = {
       roles: { r: 'role' },

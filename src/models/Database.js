@@ -8,7 +8,6 @@ import knex from 'knex'
 export default class Database {
   static _db
   static _query
-  static _error = ''
 
   /**
    *
