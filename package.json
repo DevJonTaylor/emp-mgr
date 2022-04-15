@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index",
+    "start": "node index",
     "seed": "node seed",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -29,6 +29,7 @@
     "mysql2": "^2.3.3"
   },
   "devDependencies": {
+    "eslint": "^8.13.0",
     "knex": "^1.0.4"
   }
 }

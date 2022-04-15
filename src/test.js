@@ -1,14 +1,5 @@
-import MainMenu from "./Classes/Items/MainMenu";
-import { getTable } from 'console.table'
+import { UX, manageQuestions } from './menus'
 
-new MainMenu()
-  .execute()
-  .display()
-  .then(emp => emp.execute().display())
-  .then(async emp => {
-    const employees = await emp.execute()
-    const arr = []
-    employees.map(e => arr.push(e.toObject()))
-    console.table(arr)
-  })
-  .catch(console.error)
+const ux = new UX(manageQuestions)
+
+ux.searchEmployees()

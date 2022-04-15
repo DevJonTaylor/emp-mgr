@@ -49,16 +49,40 @@ export class Employee extends Modal {
       results = await super.runQuery(query)
     } else {
       const tempKeys = [...this.keys]
-      this.keys = ['id', 'name', 'title', 'salary', 'department']
+      this.keys = typeof(switchKeys) === 'boolean'
+        ? ['id', 'name', 'title', 'salary', 'department']
+        : switchKeys
       results = await super.runQuery(query)
       this.keys = [...tempKeys]
     }
     return results
   }
 
-  static byName(name) {
+  static async getCount(query) {
+    const results = await this.runQuery(query.count({count: 0}), ['count'])
+
+    return results[0].columns.count
+  }
+
+  static async byName(name, page = 1, limit= 10) {
     const { columns } = this.getQuery()
-    return this.runQuery(this.getMultipleQuery().where(columns.select.name, 'like', `%${name}%`), true)
+    const query = this.getMultipleQuery()
+      .where(columns.select.name, 'like', `%${name}%`)
+    const total = await this.getCount(query.clone())
+
+    if(!page) return this.runQuery(query, true)
+
+    const pages = total / limit <= 1 ? 1 : total / limit
+    let offset = page * limit
+
+    query.offset(offset <= limit ? 0 : offset).limit(limit)
+    const results = await this.runQuery(query, true)
+    return {
+      total,
+      page,
+      pages,
+      results
+    }
   }
 }
 
