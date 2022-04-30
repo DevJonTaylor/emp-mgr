@@ -1,36 +1,93 @@
-import Modal from './Modal'
-import DB from './Database'
+import Model from '../Classes/Model'
+import ModelCollection from '../Classes/ModelCollection'
 
-export default class Role extends Modal {
+class RoleCollection extends ModelCollection {}
+
+export class Role extends Model {
   static table = 'role'
   static keys = ['id', 'title', 'salary', 'department_id']
 
-  static getQuery() {
-    return DB.getQuery()
-      .sum({total: 'r.salary'})
-      .from({e: 'employee'})
-      .join({r: 'role'}, 'e.role_id', 'r.id')
+  static getCollection() {
+    return new RoleCollection()
+  }
+
+  static all() {
+    return this.get(this.getQuery(true).select('*'))
   }
 
   static byName(name) {
-    return DB.query(DB.getQuery()
+    return this
+      .get(this.getQuery(true)
+        .select('*')
+        .where('title', 'like', `%${name}%`)
+      )
+  }
+
+  static byId(id) {
+    return this.get(this.getQuery(true).select('*').where({id}))
+  }
+
+  static async totalSalary() {
+    const results = await this.runQuery(this.getQuery()
+      .sum({salary: 'r.salary'})
+      .from({e:'employee'})
+      .join({r: 'role'}, 'e.role_id', 'r.id')
+    )
+
+    return results[0].salary
+  }
+
+  static async create(values) {
+    const results = await super.create(values)
+    return this.byId(results.insertId)
+  }
+
+  static byDepartment(id) {
+    return this.get(this.getQuery(true).select('*').where({ department_id: id }))
+  }
+}
+
+export class RoleJoins extends Role {
+  static keys = ['id', 'title', 'salary', 'department', 'total_salary']
+
+  static create(values) {
+    return super.create(values)
+  }
+
+  static q() {
+    return this.getQuery()
       .select({
         id: 'r.id',
         title: 'r.title',
         salary: 'r.salary',
         department: 'd.name'
       })
+      .sum({total_salary: 'r.salary'})
       .from({ r: 'role' })
-      .join({ d: 'department' }, 'r.department_id', 'd.id')
-      .where('r.title', 'like', `%${name}%`)
-    )
+      .join({ d: 'department' }, 'd.id', 'r.department_id')
+      .join({ e: 'employee' }, 'e.role_id', 'r.id')
+      .groupBy('r.id')
   }
 
-  static totalSalaryById(id, isDepartmentId = false) {
-    return !id
-      ? DB.query(this.getQuery().toSQL()).then(total => total[0].total)
-      : !isDepartmentId
-        ? DB.query(this.getQuery().where('r.id', id).toSQL()).then(total => total[0].total)
-        : DB.query(this.getQuery().where('r.department_id', id).toSQL()).then(total => total[0].total)
+  static all() {
+    return this.get(this.q())
+  }
+
+  static byName(name) {
+    return this.get(this.q().where('title', 'like', `%${name}%`))
+  }
+
+  static byId(id) {
+    return this.get(this.q().where({ 'r.id': id }))
+  }
+
+  static byDepartment(id) {
+    return this.get(this.q().where({ department_id: id }))
+  }
+
+  static totalSalary() {
+    return super.totalSalary()
   }
 }
+
+Role.Joins = RoleJoins

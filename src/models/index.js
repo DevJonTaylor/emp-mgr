@@ -1,6 +1,6 @@
 import Department from './Department'
-import Role from './Role'
+import { Role, RoleJoins } from './Role'
 import { Employee, Manager, Subordinate } from './Employee'
 
 
-export { Department, Role, Employee, Manager, Subordinate }
+export { Department, Role, RoleJoins, Employee, Manager, Subordinate }

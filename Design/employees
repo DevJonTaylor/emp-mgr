@@ -1,0 +1,19 @@
+Splash
+Main Menu > Employees
+* New Employee
+* View All
+* Search By Name
+* View by Role
+* View By Department
+* Back to Main Menu
+* Exit
+=============================================
+Splash
+Main Menu > Employees > New Employee
+[Select Department]
+[Select Role]
+[Select Manager]
+First Name
+Last Name
+[Confirm]
+==============================================

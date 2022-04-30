@@ -1,12 +1,35 @@
-import Modal from './Modal'
-import DB from './Database'
+import Model from '../Classes/Model'
+import ModelCollection from '../Classes/ModelCollection'
 
-export default class Department extends Modal {
+class Departments extends ModelCollection {}
+
+export default class Department extends Model {
   static table = 'department'
   static keys = ['id', 'name']
 
+  static getCollection() {
+    return new Departments()
+  }
+
+  static async create(name) {
+    const results = await super.create({name})
+    return this.byId(results.insertId)
+  }
+
+  static getSelect() {
+    return this.getQuery().select('*').from(this.table)
+  }
+
+  static all() {
+    return this.get(this.getSelect())
+  }
+
   static byName(name) {
-    return DB.getQuery(this.name).where('name', 'like', `%${name}%`)
+    return this.get(this.getSelect().where('name', 'like', `%${name}%`))
+  }
+
+  static byId(id) {
+    return this.get(this.getSelect().where({ id }))
   }
 
   static getQueryVariables() {
@@ -30,7 +53,7 @@ export default class Department extends Modal {
   static getManagerSubQuery() {
     const { tables, joins } = this.getQueryVariables()
 
-    return DB.getQuery()
+    return this.getQuery()
       .distinct('e1.id')
       .from(tables.employee1)
       .join(...joins.manager)
@@ -39,41 +62,41 @@ export default class Department extends Modal {
   static getCountQuery(countColumnName = 'head_count') {
     const { tables, joins } = this.getQueryVariables()
 
-    return DB.getQuery()
+    return this.getQuery()
       .count({[countColumnName]: 'e.id'})
       .from(tables.department)
       .join(...joins.roleDepartmentId)
       .join(...joins.empRoleId)
   }
 
-  static headCountCompany() {
-    return DB.query(this.getCountQuery().toSQL())
+  static async headCountCompany() {
+    const results = await this.runQuery(this.getCountQuery())
+    return results[0].head_count
   }
 
-  static headCountByDepartmentId(id) {
-    return DB.query(this
-      .getCountQuery()
-      .where('d.id', id)
-      .toSQL())
+  static async headCountByDepartmentId(id) {
+    const results = await this.runQuery(this.getCountQuery().where('d.id', id))
+
+    return results[0].head_count
   }
 
-  static headCountSubordinates(id) {
+  static async headCountSubordinates(departmentId) {
     const countQuery = this.getCountQuery('subordinates')
       .whereNotIn('e.id', this.getManagerSubQuery())
-    if(!id) return DB.query(countQuery.toSQL())
-      .then(countArray => countArray[0].subordinates)
 
-    return DB.query(countQuery.andWhere('d.id', id).toSQL())
-      .then(countArray => countArray[0].subordinates)
+    if(departmentId) countQuery.andWhere('d.id', departmentId)
+
+    const results = await this.runQuery(countQuery)
+    return results[0].subordinates
   }
 
-  static headCountManagers(id) {
+  static async headCountManagers(departmentId) {
     const countQuery = this.getCountQuery('managers')
       .whereIn('e.id', this.getManagerSubQuery())
-    if(!id) return DB.query(countQuery.toSQL())
-      .then(countArray => countArray[0].managers)
+    if(departmentId) countQuery.andWhere('d.id', departmentId)
 
-    return DB.query(countQuery.andWhere('d.id', id).toSQL())
-      .then(countArray => countArray[0].managers)
+    const results = await this.runQuery(countQuery)
+
+    return results[0].managers
   }
 }
