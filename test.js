@@ -1,7 +1,5 @@
-const knex = require('knex')({client: 'mysql'})
+global.__rootdir = __dirname
+require('dotenv').config()
 
-const department = knex('department')
-department
-  .delete().where({id: 1})
-console.log(department.toSQL().sql)
-console.log(department.toSQL().bindings)
+require = require("esm")(module/*, options*/)
+module.exports = require("./src/test.js")
