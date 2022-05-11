@@ -16,7 +16,7 @@ import gradient from 'gradient-string'
     'pastel'
   ]
 
-export default class Colors {
+export class Colors {
   static $ = {}
 
   static upAndDown(string, gradientName) {
@@ -30,6 +30,6 @@ export default class Colors {
 
 for(const gradientName of gradientNames) {
   const g = gradient[gradientName]
-  Colors[gradientName]
-  Colors.$[gradientName] = g.multiline
+  Colors[gradientName] = g
+  Colors[gradientName].$ = g.multiline
 }

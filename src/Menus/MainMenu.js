@@ -1,8 +1,17 @@
-import Menu from '../Classes/View/Menu'
+import { MenuOption } from '../Classes/View/MenuOption'
+import { Roles } from './Roles/Roles'
+import { Departments } from './Departments/Departments'
+import { Employees } from './Employees/Employees'
 
-export default class MainMenu extends Menu {
-  name = 'Main Menu'
-  message = 'Select a Category'
+export class MainMenu extends MenuOption {
+  display = 'Main Menu'
+  message = 'Select a Category:  '
+
+  constructor() {
+    super()
+
+    this.addOption('Employees', () => new Employees(this))
+    this.addOption('Roles', () => new Roles(this))
+    this.addOption('Departments', () => new Departments(this))
+  }
 }
-
-

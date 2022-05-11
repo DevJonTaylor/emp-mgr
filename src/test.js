@@ -1,3 +1,5 @@
-import * as QF from 'question-factory'
+import { Application } from './Classes/Application'
 
-console.log(QF)
+Application
+  .start()
+  .catch(console.error)

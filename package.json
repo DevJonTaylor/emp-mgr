@@ -27,8 +27,7 @@
     "inquirer": "^8.2.2",
     "lodash": "^4.17.21",
     "mysql2": "^2.3.3",
-    "nanoid": "^3.3.3",
-    "question-factory": "file:../../../../Coding/Node/question-factory"
+    "nanoid": "^3.3.3"
   },
   "devDependencies": {
     "eslint": "^8.13.0",

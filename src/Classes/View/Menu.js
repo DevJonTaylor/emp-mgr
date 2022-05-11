@@ -1,111 +1,91 @@
-import Splash from './Splash'
-import { nanoid } from 'nanoid'
+import { Application } from '../Application'
 import QF from '../../../lib/Questions/QFactory'
 import { camelCase } from 'lodash'
 
+export class Menu {
+  name = 'Exit'
+  message = 'Thank you and have a fantastic day!'
+  current
+  mainMenu
+  options = new Map()
 
-
-/**
- * @typedef {{[name:string]: string}} menuObject
- * @typedef {{[id: string]: (Menu) => void}} answerObject
- *
- * @class
- * @property {string} name The name that is displayed on the menu on the back option and breadcrumbs.
- * @property {string} msg The message that is displayed when the menu opens.
- * @property {Menu} previous This is the last menu selected.
- * @property {menuObject} menu This hold the menu display name and ID
- * @property {answerObject} answers This holds the function that is run when the menu option is selected.
- */
-class Menu {
-  name
-  msg
-  previous
-  menu = {}
-  answers = {}
-
-  constructor({ name, message, previous }) {
-    this.previous = previous
-    this.name = name
-    this.msg = message
+  constructor(mainMenu) {
+    this.mainMenu = mainMenu
+    this.setCurrent(mainMenu)
   }
 
-  /**
-   * Adds an item to the menu.
-   * @param { string } name
-   * @param { (this) => void } action
-   * @returns { this } For chaining.
-   */
-  addMenu(name, action) {
-    const id = camelCase(nanoid().toLowerCase())
-    this.menu[name] = id
-    this.answers[id] = action
-
-    return this
+  get breadcrumb() {
+    return this.current.breadcrumb()
   }
 
-  /**
-   * Returns the current Breadcrumb
-   * @returns {string}
-   */
-  breadcrumb() {
-    if(!this.previous) return this.name
-    return `${this.previous.breadcrumb()} > ${this.name}`
+  get back() {
+    return this.current.back
   }
 
-  /**
-   * Runs Inquirer questions
-   * @returns {Promise<answer>}
-   */
-  getAnswer() {
-    if(this.previous) this.addMenu(`Back to ${this.previous.name}`, () => {
-      return this.previous.render()
+  setCurrent(menuOption) {
+    this.options.clear()
+    this.current = menuOption
+  }
+
+  async update(selectedMenu) {
+    const method = this.options.get(selectedMenu)
+    const newCurrent = await method()
+    this.setCurrent(newCurrent)
+  }
+
+  addOption(name, method) {
+    this.options.set(name, method)
+  }
+
+  addChoice(list, { display, name, method, object }) {
+    list.newChoice(display, choice => choice.value(name))
+    this.addOption(name, method.bind(object))
+  }
+
+  addExit(list) {
+    this.addChoice(list, {
+      display: 'Exit',
+      name: 'exit',
+      method: () => Application.getApplication().exit(this.message),
+      object: this
     })
-    this.addMenu('Exit', () => {
-      console.log('Hav a fantastic day!')
-      process.exit(1)
-    })
-    return QF.list('answer', this.msg, list => {
-      for(const [name, value] of Object.entries(this.menu)) {
-        list.newChoice(name, choice => choice.value(value))
-      }
-    }).answers
   }
 
-  /**
-   * Clears the screen, displays the splash, displays the breadcrumb, and returns void when done.
-   * @returns {Promise<void>}
-   */
-  setup(breadcrumb) {
-    return Splash.get()
-      .then(splash => {
-        console.clear()
-        console.log(splash)
-        console.log(!breadcrumb ? this.breadcrumb() : breadcrumb)
-        return Promise.resolve()
+  addMainMenu(list) {
+    if(this.mainMenu === this.current || this.mainMenu === this.back) return
+    this.addChoice(list, {
+      display: this.mainMenu.display,
+      name: this.mainMenu.name,
+      method: () => this.mainMenu,
+      object: this
+    })
+  }
+
+  addBack(list) {
+    if(!this.current.back) return
+    this.addChoice(list, {
+      display: `Back to ${this.back.display}`,
+      name: 'back',
+      method: () => this.back,
+      object: this
+    })
+  }
+
+  async render() {
+    try {
+      const { selected } = await QF.list('selected', this.current.message, list => {
+        this.current.options.forEach(option => {
+          this.addChoice(list, option)
+        })
+        this.addBack(list)
+        this.addMainMenu(list)
+        this.addExit(list)
       })
-  }
+        .answers
 
-  /**
-   * Starts everything off.
-   * @returns {void}
-   */
-  render(tempBreadcrumb) {
-    this.setup(`${this.breadcrumb()} > ${tempBreadcrumb}`)
-      .then(() => {
-        return this.getAnswer()
-      })/
-      .then(({ answer }) => this.run(answer))
-  }
-
-  /**
-   * Runs the answer selected.
-   * @param answer
-   * @returns {Promise<void>}
-   */
-  run(answer) {
-    return this.setup()
-      .then(() => this.answers[answer](this))
+      return selected
+    } catch(error) {
+      return Promise.reject(error)
+    }
   }
 }
-
-export default Menu
