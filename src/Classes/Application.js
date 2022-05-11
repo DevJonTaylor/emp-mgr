@@ -8,6 +8,8 @@ export class Application {
   isEnvironment = false
   isSql = false
 
+  isAlive = true
+
   menu
   screen
 
@@ -151,20 +153,21 @@ export class Application {
 
     // TODO:  set requests
 
-    return this.screen.run()
-      .then(selected => this.selected(selected))
-      .catch(console.error)
+    return this.run()
   }
 
-  selected(selected) {
-    console.log(selected)
-    this.screen.update(selected)
-    this.screen.run()
-      .then(selected => this.selected(selected))
+  async run() {
+    if(this.isAlive) {
+      await this.screen.run()
+      return this.run()
+    }
+
+    this.screen.log(this.message)
+    process.exit(1)
   }
 
   exit(message) {
-    this.screen.log(message)
-    process.exit(1)
+    this.message = message
+    this.isAlive = false
   }
 }
