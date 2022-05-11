@@ -1,7 +1,7 @@
 import QF from '../../../lib/Questions/QFactory'
-import { Department } from '../../models'
+import { Department } from '../../Models'
 import newDepartment from './newDepartment'
-import Model from '../../Classes/Model'
+import Model from '../../Classes/Model/Model'
 
 class Select {
   message = 'Select a Department:  '

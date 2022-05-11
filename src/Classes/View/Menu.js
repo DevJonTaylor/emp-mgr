@@ -1,21 +1,22 @@
 import Splash from './Splash'
 import { nanoid } from 'nanoid'
-import QF from '../../lib/Questions/QFactory'
+import QF from '../../../lib/Questions/QFactory'
 import { camelCase } from 'lodash'
+
 
 
 /**
  * @typedef {{[name:string]: string}} menuObject
- * @typedef {{[id: string]: (BaseDisplay) => void}} answerObject
+ * @typedef {{[id: string]: (Menu) => void}} answerObject
  *
  * @class
  * @property {string} name The name that is displayed on the menu on the back option and breadcrumbs.
  * @property {string} msg The message that is displayed when the menu opens.
- * @property {BaseDisplay} previous This is the last menu selected.
+ * @property {Menu} previous This is the last menu selected.
  * @property {menuObject} menu This hold the menu display name and ID
  * @property {answerObject} answers This holds the function that is run when the menu option is selected.
  */
-class BaseDisplay {
+class Menu {
   name
   msg
   previous
@@ -92,7 +93,7 @@ class BaseDisplay {
     this.setup(`${this.breadcrumb()} > ${tempBreadcrumb}`)
       .then(() => {
         return this.getAnswer()
-      })
+      })/
       .then(({ answer }) => this.run(answer))
   }
 
@@ -107,4 +108,4 @@ class BaseDisplay {
   }
 }
 
-export default BaseDisplay
+export default Menu

@@ -1,4 +1,4 @@
-import { Role } from '../../models'
+import { Role } from '../../Models'
 import QF from '../../../lib/Questions/QFactory'
 import newRole from './newRole'
 export default async function(department) {

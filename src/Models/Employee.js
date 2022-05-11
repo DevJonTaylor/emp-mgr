@@ -1,5 +1,5 @@
-import Model from '../Classes/Model'
-import ModelCollection from '../Classes/ModelCollection'
+import Model from '../Classes/Model/Model'
+import ModelCollection from '../Classes/Model/ModelCollection'
 import { concatRaw, getRaw } from '../Classes/Database/QueryBuilder'
 
 class EmployeeCollection extends ModelCollection {}
@@ -171,11 +171,6 @@ export class Manager extends Subordinate {
 
   static byDepartment(id) {
     return this.get(this.q().where({ 'd.id': id }))
-  }
-
-  async teamSize() {
-    const subs = await Subordinate.byManager(this.id)
-    return subs.length
   }
 }
 

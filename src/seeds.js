@@ -1,4 +1,4 @@
-import {Department, Employee, Role} from "./models";
+import {Department, Employee, Role} from "./Models";
 import {department, employee, role} from "../seeds.json";
 import { readFile } from 'fs/promises'
 import mysql from "mysql2";

@@ -1,4 +1,4 @@
-import { Manager } from '../../models'
+import { Manager } from '../../Models'
 import QF from '../../../lib/Questions/QFactory'
 
 function listText(manager) {

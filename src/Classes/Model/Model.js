@@ -1,5 +1,5 @@
-import DB from './Database/Database'
-import { getQuery } from './Database/QueryBuilder'
+import DB from '../Database/Database'
+import { getQuery } from '../Database/QueryBuilder'
 import ModelCollection from './ModelCollection'
 
 export default class Model {
