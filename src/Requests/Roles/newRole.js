@@ -1,7 +1,7 @@
 import QF from '../../../lib/Questions/QFactory'
 import selectDepartment from '../Departments/selectDepartment'
 import confirm from '../confirm'
-import { Role } from '../../models'
+import { Role } from '../../Models'
 export default async function(department) {
   if(!departmentId) department = selectDepartment()
   const { title, salary } = await QF.input('title', 'What is the Role Title:', input => input.validateEmpty)

@@ -3,7 +3,7 @@ import selectRole from '../Roles/selectRole'
 import selectManager from './selectManager'
 import QF from '../../../lib/Questions/QFactory'
 import confirm from '../confirm'
-import { Employee } from '../../models'
+import { Employee } from '../../Models'
 
 export default async function() {
   try {

@@ -1,4 +1,4 @@
-import { Department } from '../../models'
+import { Department } from '../../Models'
 import QF from '../../../lib/Questions/QFactory'
 import confirm from '../confirm'
 

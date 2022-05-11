@@ -1,5 +1,5 @@
-import Model from '../Classes/Model'
-import ModelCollection from '../Classes/ModelCollection'
+import Model from '../Classes/Model/Model'
+import ModelCollection from '../Classes/Model/ModelCollection'
 
 class RoleCollection extends ModelCollection {}
 
