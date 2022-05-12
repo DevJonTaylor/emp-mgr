@@ -1,4 +1,5 @@
 import { MenuOption } from '../../Classes/View/MenuOption'
+import { viewAll, newDepartment } from './Requests'
 
 export class Departments extends MenuOption {
   display = 'Departments'
@@ -9,8 +10,8 @@ export class Departments extends MenuOption {
     super()
 
     this.setBack(back)
-    this.addOption('View All', () => this.back)
-    this.addOption('Search By Name', () => this.back)
-    this.addOption('Create New Department', () => this.back)
+    this.addOption(...viewAll(this))
+    this.addOption(...newDepartment(this))
   }
 }
+

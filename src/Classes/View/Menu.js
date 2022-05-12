@@ -28,9 +28,13 @@ export class Menu {
   }
 
   async update(selectedMenu) {
-    const method = this.options.get(selectedMenu)
-    const newCurrent = await method()
-    this.setCurrent(newCurrent)
+    try {
+      const method = this.options.get(selectedMenu)
+      const newCurrent = await method()
+      this.setCurrent(newCurrent)
+    } catch(error) {
+      return Promise.reject(error)
+    }
   }
 
   addOption(name, method) {
@@ -46,13 +50,17 @@ export class Menu {
     this.addChoice(list, {
       display: 'Exit',
       name: 'exit',
-      method: () => Application.getApplication().exit(this.message),
+      method: () => {
+        Application.getApplication().exit(this.message)
+        return this.current
+      },
       object: this
     })
   }
 
   addMainMenu(list) {
     if(this.mainMenu === this.current || this.mainMenu === this.back) return
+
     this.addChoice(list, {
       display: this.mainMenu.display,
       name: this.mainMenu.name,

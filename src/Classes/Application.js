@@ -109,7 +109,7 @@ export class Application {
     ]
 
     try {
-      await File.write(`${rootdir}/.env`, lines.join('\n'))
+      await File.write(`${__rootdir}/.env`, lines.join('\n'))
     } catch(error) {
       console.error(error)
       this.exit('UNKNOWN ERROR')
