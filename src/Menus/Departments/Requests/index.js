@@ -4,7 +4,7 @@ import { allDepartments } from '../Functions'
 function viewAll(self) {
   return [ 'View All', async () => {
     const departments = await allDepartments()
-    new ViewAllDepartments(self, departments)
+    return new ViewAllDepartments(self, departments)
   } ]
 }
 

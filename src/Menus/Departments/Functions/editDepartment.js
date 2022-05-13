@@ -3,13 +3,16 @@ import { Department } from '../../../Models'
 
 export default async function(department) {
   try {
-    const { name } = QF
+    const { id } = department.toObject()
+    const { name } = await QF
       .input('name', 'New Department Name?', input => input.default(department.name))
       .answers
 
-    if(!name || name === department.name) return department
-    await Department.update({ name }, { id: department.id })
-    return Department.byId(department.id)
+    if ( !name || name === department.name ) return department
+
+    await Department.update({ name }, { id })
+    return Department.byId(id)
+
   } catch(error) {
     return Promise.reject(error)
   }

@@ -21,6 +21,12 @@ export class MenuOption {
     return camelCase(this.display)
   }
 
+  prepare() {}
+
+  execute() {}
+
+  clean() {}
+
   setBack(back) {
     this.back = back
     this.mainMenu = back.mainMenu
@@ -60,6 +66,8 @@ export class MenuOption {
   }
 
   displayCollection() {
+    this.options = []
+
     this.collection.forEach(
       row => this.addOption(this.handleDisplay(row), this.handleRequest(row))
     )

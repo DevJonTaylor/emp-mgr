@@ -10,7 +10,7 @@ export declare class Screen {
   clear(): this
 
   /**
-   * Logs input to the console.
+   * Loggers input to the console.
    * @returns {this} For chaining purposes.
    */
   log(): this

@@ -3,8 +3,10 @@ import { Screen } from './View/Screen'
 import { MainMenu } from '../Menus/MainMenu'
 import { Menu } from './View/Menu'
 import Database from './Database/Database'
+import { BaseClass } from './BaseClass'
+import ApplicationLogger from '../../lib/Loggers/ApplicationLogger'
 
-export class Application {
+export class Application extends BaseClass {
   isEnvironment = false
   isSql = false
 
@@ -12,8 +14,6 @@ export class Application {
 
   menu
   screen
-
-  requests = {}
 
   static #app
 
@@ -29,7 +29,28 @@ export class Application {
     await this.stepThree()
   }
 
+  constructor(applicationLogger) {
+    super(ApplicationLogger.getLogger())
+  }
+
+  gameLoop() {
+    process.on('gameLoop', () => {
+
+      setTimeout(() => {
+        if(!this.isAlive) {
+          this.screen.log(this.message)
+          process.exit(1)
+        }
+      }, 1000)
+
+    })
+
+    this.debug('gameLoop started')
+  }
+
   static async start() {
+
+
     const app = this.getApplication()
     await app.initScreen().#routine()
   }
@@ -45,10 +66,6 @@ export class Application {
 
   getScreen() {
     return !this.screen ? this.initScreen().screen : this.screen
-  }
-
-  registerRequest(name, request) {
-
   }
 
   get isEnvHost() {
@@ -151,19 +168,11 @@ export class Application {
 
     this.screen.setMenu(this.menu)
 
-    // TODO:  set requests
-
     return this.run()
   }
 
   async run() {
-    if(this.isAlive) {
-      await this.screen.run()
-      return this.run()
-    }
 
-    this.screen.log(this.message)
-    process.exit(1)
   }
 
   exit(message) {

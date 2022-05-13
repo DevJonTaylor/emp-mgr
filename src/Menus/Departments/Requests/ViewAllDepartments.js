@@ -3,8 +3,8 @@ import ViewDepartment from './ViewDepartment'
 import { createDepartment } from '../Functions'
 
 export function newDepartment(self) {
-  return [ 'New Department', () => {
-    const department = createDepartment()
+  return [ 'New Department', async () => {
+    const department = await createDepartment()
     if(!department) return self
     return new ViewDepartment(self, department)
   } ]

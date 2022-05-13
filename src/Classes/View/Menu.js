@@ -27,16 +27,6 @@ export class Menu {
     this.current = menuOption
   }
 
-  async update(selectedMenu) {
-    try {
-      const method = this.options.get(selectedMenu)
-      const newCurrent = await method()
-      this.setCurrent(newCurrent)
-    } catch(error) {
-      return Promise.reject(error)
-    }
-  }
-
   addOption(name, method) {
     this.options.set(name, method)
   }
@@ -92,6 +82,20 @@ export class Menu {
         .answers
 
       return selected
+    } catch(error) {
+      return Promise.reject(error)
+    }
+  }
+
+  async execute() {
+    try {
+      await this.current.prepare()
+      const results = this.render()
+      await this.current.clean()
+
+      const method = this.options.get(results)
+      const newCurrent = await method()
+      this.setCurrent(newCurrent)
     } catch(error) {
       return Promise.reject(error)
     }
