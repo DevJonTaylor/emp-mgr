@@ -2,11 +2,11 @@ import { camelCase } from 'lodash'
 
 export class MenuOption {
   display = ''
-  name = ''
   message = ''
   back
   mainMenu
   options = []
+  collection
 
   /**
    *
@@ -20,6 +20,12 @@ export class MenuOption {
   get name() {
     return camelCase(this.display)
   }
+
+  prepare() {}
+
+  execute() {}
+
+  clean() {}
 
   setBack(back) {
     this.back = back
@@ -49,5 +55,21 @@ export class MenuOption {
     this.options.push(option)
 
     return this
+  }
+
+  handleDisplay(row) {
+    return row.name
+  }
+
+  handleRequest(row) {
+    return row
+  }
+
+  displayCollection() {
+    this.options = []
+
+    this.collection.forEach(
+      row => this.addOption(this.handleDisplay(row), this.handleRequest(row))
+    )
   }
 }

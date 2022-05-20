@@ -27,12 +27,6 @@ export class Menu {
     this.current = menuOption
   }
 
-  async update(selectedMenu) {
-    const method = this.options.get(selectedMenu)
-    const newCurrent = await method()
-    this.setCurrent(newCurrent)
-  }
-
   addOption(name, method) {
     this.options.set(name, method)
   }
@@ -46,13 +40,18 @@ export class Menu {
     this.addChoice(list, {
       display: 'Exit',
       name: 'exit',
-      method: () => Application.getApplication().exit(this.message),
+      method: () => {
+        return this.current
+      },
       object: this
     })
   }
 
   addMainMenu(list) {
-    if(this.mainMenu === this.current || this.mainMenu === this.back) return
+    if(this.mainMenu === this.current || this.mainMenu === this.back) {
+      return
+    }
+
     this.addChoice(list, {
       display: this.mainMenu.display,
       name: this.mainMenu.name,
@@ -62,7 +61,10 @@ export class Menu {
   }
 
   addBack(list) {
-    if(!this.current.back) return
+    if(!this.current.back) {
+      return
+    }
+
     this.addChoice(list, {
       display: `Back to ${this.back.display}`,
       name: 'back',
@@ -84,6 +86,22 @@ export class Menu {
         .answers
 
       return selected
+    } catch(error) {
+      return Promise.reject(error)
+    }
+  }
+
+  async execute() {
+    try {
+      await this.current.prepare()
+      const results = await this.render()
+      await this.current.clean()
+
+      const method = this.options.get(results)
+      const newCurrent = await method()
+      this.setCurrent(newCurrent)
+
+      return results
     } catch(error) {
       return Promise.reject(error)
     }

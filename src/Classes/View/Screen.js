@@ -45,7 +45,7 @@ export class Screen {
   async run() {
     await this.clear().splash()
     this.breadcrumb()
-    const selected = await this.menu.render()
-    await this.menu.update(selected)
+    const selected = await this.menu.execute()
+    return this.menu.update(selected)
   }
 }
