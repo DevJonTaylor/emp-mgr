@@ -1,123 +1,82 @@
 import { File } from './Model/File'
+import QF from '../../lib/Questions/QFactory'
 import { Screen } from './View/Screen'
 import { MainMenu } from '../Menus/MainMenu'
 import { Menu } from './View/Menu'
 import Database from './Database/Database'
-import { BaseClass } from './BaseClass'
-import ApplicationLogger from '../../lib/Loggers/ApplicationLogger'
 
-export class Application extends BaseClass {
-  isEnvironment = false
-  isSql = false
+const SLEEPING = 0;
+const WAKING = 1;
+const WORKING = 2;
+const WAITING = 3;
+const ERROR = 4;
+const QUITING = 5;
 
-  isAlive = true
-
-  menu
-  screen
-
-  static #app
-
-  static getApplication() {
-    return !this.#app ? this.#app = new Application() : this.#app
-  }
-
-  async #routine() {
-    const one = await this.stepOne()
-    if(!one) return false
-    const two = await this.stepTwo()
-    if(!two) return false
-    await this.stepThree()
-  }
-
-  constructor(applicationLogger) {
-    super(ApplicationLogger.getLogger())
-  }
-
-  gameLoop() {
-    process.on('gameLoop', () => {
-
-      setTimeout(() => {
-        if(!this.isAlive) {
-          this.screen.log(this.message)
-          process.exit(1)
-        }
-      }, 1000)
-
-    })
-
-    this.debug('gameLoop started')
-  }
-
-  static async start() {
+const exitMessage = 'Thank you and have a great day!'
+const envFilePath = `${ __rootdir }/.env`
 
 
-    const app = this.getApplication()
-    await app.initScreen().#routine()
-  }
+class Application {
+  static state = SLEEPING;
+  static current
+  static mainMenu
+  static menu
 
-  initScreen() {
-    if(!this.screen) {
-      this.screen = new Screen()
-      this.screen.clear()
-      this.screen.log('Initializing Application')
+  static get config() {
+    const { DB_HOST, DB_NAME, DB_USER, DB_PW } = process.env
+    return {
+      host: DB_HOST,
+      database: DB_NAME,
+      user: DB_USER,
+      password: DB_PW
     }
-    return this
   }
 
-  getScreen() {
-    return !this.screen ? this.initScreen().screen : this.screen
+  static start() {
+    console.clear()
+    console.log('Initializing Application')
+    return this.wake();
   }
 
-  get isEnvHost() {
-    return typeof process.env.DB_HOST !== 'undefined'
-  }
-
-  async #isEnv() {
-    if(!this.isEnvHost) {
-      const isFile = await File.exists(`${__rootdir}/.env`)
-      console.log(isFile)
-      if(!isFile) return false
+  static async wake() {
+    try {
+      this.state = WAKING;
+      const env = await File.exists(envFilePath)
+      if (!env)
+        return this.newEnv()
+      await Database.testConnection(this.config)
+    } catch(err) {
+      switch(err.code) {
+        case 'ENOTFOUND': // invalid host
+        case 'ER_BAD_DB_ERROR': // invalid schema
+        case 'ER_ACCESS_DENIED_ERROR': // Invalid user or pass
+        case 'ECONNREFUSED': // MySQL server not found.
+          console.clear()
+          console.log('Could not start application.')
+          console.log(err.message)
+          await File.delete(envFilePath)
+          return process.exit(1)
+        default:
+          return this.error(err)
+      }
     }
 
-    this.isEnvironment = true
-    return true
+    this.screen = new Screen()
+    this.menu = new Menu(new MainMenu())
+
+    await this.work()
   }
 
-  async #promptCredentials() {
-    this.screen.log('Please Provide MySQL Host and Credentials:')
-
-    return this.screen.getFactory()
-      .input('host', 'Host: ', q => q.validateEmpty.default('localhost'))
+  static async newEnv() {
+    console.clear()
+    console.log('Control+C to exit.')
+    console.log('Please Provide MySQL Host and Credentials:')
+    const { host, database, user, password } = await QF.input('host', 'Host: ', q => q.validateEmpty.default('localhost'))
       .input('database', 'Schema Name: ', q => q.validateEmpty.default('office_db'))
       .input('user', 'Username: ', q => q.validateEmpty)
       .password('password', 'Password: ')
       .answers
-  }
 
-  async #checkCredentials(config) {
-    if(!config) config = {
-      host: process.env.DB_HOST,
-      database: process.env.DB_NAME,
-      user: process.env.DB_USER,
-      password: process.env.DB_PW
-    }
-    try {
-      return await Database.testConnection(config)
-    } catch(error) {
-      if(!this.isEnvironment) {
-        this.screen.log(`ERROR:  ${ error.name }`)
-        this.exit('Please contact your System Administrator for assistance connecting.')
-      } else {
-        this.screen.log('Saved Credentials are invalid')
-        this.screen.log('Removing Environment File')
-        await File.delete(`${__rootdir}/.env`)
-        delete process.env.DB_HOST
-        return false
-      }
-    }
-  }
-
-  async #saveEnv({ host, database, user, password }) {
     const lines = [
       `DB_HOST=${host}`,
       `DB_NAME=${database}`,
@@ -125,58 +84,44 @@ export class Application extends BaseClass {
       `DB_PW=${password}`
     ]
 
+    await File.write(envFilePath, lines.join('\n'))
+    require('dotenv').config()
+    return this.start()
+  }
+
+  static async prepare() {
+    await this.screen.clear().splash()
+    this.screen.log(this.menu.breadcrumb)
+
+  }
+
+  static async work() {
+    this.state = WORKING;
+
+    await this.prepare()
+
     try {
-      await File.write(`${__rootdir}/.env`, lines.join('\n'))
-    } catch(error) {
-      console.error(error)
-      this.exit('UNKNOWN ERROR')
+      const selected = await this.menu.execute()
+      if(selected === 'exit') return this.quit()
+      return this.work()
+    } catch(err) {
+      this.error(err)
     }
   }
 
-  async stepOne() {
-    this.screen.log('Testing Environment File')
-    const isEnv = await this.#isEnv()
-    if(!isEnv) {
-      this.screen.log('Missing Environment File')
-      const config = await this.#promptCredentials()
-      await this.#checkCredentials(config)
-      await this.#saveEnv(config)
-
-      this.screen.log('Environment File Created')
-      this.isEnvironment = true
-      this.isSql = true
-    }
-
-    return true
+  static error(err) {
+    this.state = ERROR;
+    console.error(err);
+    process.exit(1);
   }
 
-  async stepTwo() {
-    if(!this.isSql) {
-      const successful = this.#checkCredentials()
-      if(!successful) return this.#routine()
-      this.isSql = true
-
-      return true
-    }
-
-    return true
-  }
-
-  stepThree() {
-    const mainMenu = new MainMenu()
-    this.menu = new Menu(mainMenu)
-
-    this.screen.setMenu(this.menu)
-
-    return this.run()
-  }
-
-  async run() {
-
-  }
-
-  exit(message) {
-    this.message = message
-    this.isAlive = false
+  static async quit() {
+    this.state = QUITING
+    this.screen.clear()
+    await this.screen.splash()
+    this.screen.log(exitMessage)
+    process.exit(1)
   }
 }
+
+export { Application }

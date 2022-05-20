@@ -1,7 +1,7 @@
 import { MenuOption } from '../../../Classes/View/MenuOption'
 import { editDepartment, deleteDepartment, displayDepartment, allDepartments } from '../Functions'
 
-export default class ViewDepartment extends MenuOption {
+export default class ViewRole extends MenuOption {
   display = 'View'
 
   department
@@ -22,7 +22,7 @@ export default class ViewDepartment extends MenuOption {
         const department = await editDepartment(this.department)
         this.back.collection = await allDepartments()
         this.back.displayCollection()
-        return new ViewDepartment(this.back, department)
+        return new ViewRole(this.back, department)
       } catch(error) {
         console.error(error)
       }
